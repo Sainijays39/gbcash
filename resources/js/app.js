@@ -28,6 +28,61 @@ Alpine.data('tiltCard', (intensity = 10) => ({
     },
 }));
 
+Alpine.data('scrollCard', () => ({
+    progress: 1,
+    isMobile: window.matchMedia('(max-width: 768px)').matches,
+    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    ticking: false,
+
+    init() {
+        if (this.reducedMotion) {
+            this.progress = 1;
+            return;
+        }
+
+        this.handleScroll = () => {
+            if (this.ticking) return;
+            this.ticking = true;
+            requestAnimationFrame(() => {
+                this.updateProgress();
+                this.ticking = false;
+            });
+        };
+        this.handleResize = () => {
+            this.isMobile = window.matchMedia('(max-width: 768px)').matches;
+        };
+
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+        window.addEventListener('resize', this.handleResize);
+        this.updateProgress();
+    },
+
+    destroy() {
+        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
+    },
+
+    updateProgress() {
+        const rect = this.$el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const total = rect.height + vh;
+        const scrolled = vh - rect.top;
+        this.progress = Math.min(1, Math.max(0, scrolled / total));
+    },
+
+    get rotate() {
+        return 20 * (1 - this.progress);
+    },
+
+    get scale() {
+        return this.isMobile ? 0.7 + 0.2 * this.progress : 1.05 - 0.05 * this.progress;
+    },
+
+    get cardStyle() {
+        return `transform: perspective(1200px) rotateX(${this.rotate}deg) scale(${this.scale});`;
+    },
+}));
+
 Alpine.store('toast', {
     items: [],
     push(message, type = 'success') {

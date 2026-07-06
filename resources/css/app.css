@@ -155,6 +155,17 @@
     to { transform: rotate(360deg) translateX(10px) rotate(-360deg); }
 }
 
+@keyframes text-hover-draw {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+}
+
+.text-hover-draw {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: text-hover-draw 4s ease-in-out forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .float-slow,
     .float-slower,
@@ -162,6 +173,11 @@
     .glow-pulse,
     .orbit-slow {
         animation: none !important;
+    }
+
+    .text-hover-draw {
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
     }
 
     [data-reveal] {

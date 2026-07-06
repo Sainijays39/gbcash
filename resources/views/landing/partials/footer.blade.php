@@ -45,4 +45,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Brand wordmark moment -->
+    <div class="relative flex h-56 items-center justify-center overflow-hidden bg-slate-950 sm:h-72">
+        <div
+            class="pointer-events-none absolute inset-0 z-0"
+            style="background: radial-gradient(125% 125% at 50% 10%, #0f0f1166 50%, #7c3aed33 100%)"
+        ></div>
+        <x-ui.text-hover-effect text="NovaPay" :duration="0.15" class="relative z-10 h-full w-full max-w-4xl" />
+    </div>
 </footer>
