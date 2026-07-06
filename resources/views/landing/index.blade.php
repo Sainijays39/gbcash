@@ -1,0 +1,10 @@
+<x-layouts.guest>
+    @include('landing.partials.hero')
+    @include('landing.partials.product-showcase')
+    @include('landing.partials.services')
+    @include('landing.partials.how-it-works')
+    @include('landing.partials.features')
+    @include('landing.partials.why-us')
+    @include('landing.partials.faq')
+    @include('landing.partials.contact-cta')
+</x-layouts.guest>
