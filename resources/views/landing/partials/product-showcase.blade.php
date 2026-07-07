@@ -42,14 +42,14 @@
                 @mousemove="onMouseMove"
                 @mouseleave="onMouseLeave"
                 :style="tiltStyle"
-                class="mx-auto max-w-4xl transition-transform duration-300 ease-out will-change-transform"
+                class="group/mockup mx-auto max-w-4xl transition-transform duration-300 ease-out will-change-transform"
             >
-                <div class="overflow-hidden rounded-2xl border border-border bg-surface shadow-glass-lg">
+                <div class="overflow-hidden rounded-2xl border border-border bg-surface shadow-glass-lg transition-shadow duration-500 group-hover/mockup:shadow-2xl">
                     <!-- Browser chrome -->
                     <div class="flex items-center gap-2 border-b border-border bg-surface-muted px-4 py-3">
-                        <span class="h-3 w-3 rounded-full bg-rose-400"></span>
-                        <span class="h-3 w-3 rounded-full bg-accent-400"></span>
-                        <span class="h-3 w-3 rounded-full bg-emerald-400"></span>
+                        <span class="h-3 w-3 rounded-full bg-rose-400 transition-transform duration-200 hover:scale-125"></span>
+                        <span class="h-3 w-3 rounded-full bg-accent-400 transition-transform duration-200 hover:scale-125"></span>
+                        <span class="h-3 w-3 rounded-full bg-emerald-400 transition-transform duration-200 hover:scale-125"></span>
                         <div class="ml-3 flex-1 truncate rounded-md bg-surface px-3 py-1 text-xs text-ink-subtle">
                             novapay.app/fastag
                         </div>
@@ -62,15 +62,16 @@
                             <div class="mt-3 space-y-4">
                                 <div>
                                     <label class="mb-1.5 block text-sm font-medium text-ink">Vehicle Number</label>
-                                    <div class="rounded-xl border border-primary-300 bg-surface px-4 py-3 font-mono text-sm font-semibold tracking-widest text-ink ring-4 ring-primary-500/10">
+                                    <div class="flex items-center rounded-xl border border-primary-300 bg-surface px-4 py-3 font-mono text-sm font-semibold tracking-widest text-ink ring-4 ring-primary-500/10">
                                         MH12&nbsp;AB&nbsp;1234
+                                        <span class="animate-caret ml-0.5 h-4 w-px bg-primary-500"></span>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="group/select">
                                     <label class="mb-1.5 block text-sm font-medium text-ink">Issuer Bank</label>
-                                    <div class="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3 text-sm text-ink">
+                                    <div class="flex cursor-pointer items-center justify-between rounded-xl border border-border bg-surface px-4 py-3 text-sm text-ink transition-colors duration-200 group-hover/select:border-primary-300">
                                         ICICI FASTag
-                                        <x-icon name="chevron-down" class="h-4 w-4 text-ink-subtle" />
+                                        <x-icon name="chevron-down" class="h-4 w-4 text-ink-subtle transition-transform duration-200 group-hover/select:rotate-180 group-hover/select:text-primary-600" />
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +86,13 @@
                                         <p class="font-display text-lg text-ink">Rohan Mehta</p>
                                         <p class="text-xs text-ink-muted">MH12 AB 1234 &middot; ICICI FASTag</p>
                                     </div>
-                                    <span class="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">Active</span>
+                                    <span class="flex items-center gap-1.5 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
+                                        <span class="relative flex h-1.5 w-1.5">
+                                            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75"></span>
+                                            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-success"></span>
+                                        </span>
+                                        Active
+                                    </span>
                                 </div>
 
                                 <div class="mt-4 flex items-center justify-between rounded-xl bg-surface px-4 py-3">
@@ -98,9 +105,9 @@
                                     <div class="flex items-center justify-between rounded-xl border border-primary-300 bg-surface px-4 py-3 ring-4 ring-primary-500/10">
                                         <span class="font-display text-xl text-ink">&#8377;500</span>
                                         <div class="flex gap-1.5">
-                                            <span class="rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-700 dark:bg-primary-500/15 dark:text-primary-300">300</span>
-                                            <span class="rounded-full bg-primary-600 px-2.5 py-1 text-xs font-semibold text-white">500</span>
-                                            <span class="rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-700 dark:bg-primary-500/15 dark:text-primary-300">1000</span>
+                                            <span class="cursor-pointer rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-700 transition-colors duration-200 hover:bg-primary-200 dark:bg-primary-500/15 dark:text-primary-300 dark:hover:bg-primary-500/25">300</span>
+                                            <span class="scale-105 cursor-pointer rounded-full bg-primary-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm shadow-primary-500/40 ring-2 ring-primary-400/40">500</span>
+                                            <span class="cursor-pointer rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-700 transition-colors duration-200 hover:bg-primary-200 dark:bg-primary-500/15 dark:text-primary-300 dark:hover:bg-primary-500/25">1000</span>
                                         </div>
                                     </div>
                                 </div>
