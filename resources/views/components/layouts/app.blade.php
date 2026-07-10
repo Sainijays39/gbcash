@@ -22,9 +22,10 @@ $bottomNavItems = [
     <div class="flex min-h-dvh">
         <!-- Desktop Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface lg:flex">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-6 py-5">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-accent-500 text-white shadow-lg shadow-primary-500/30">
-                    <x-icon name="sparkles" class="h-5 w-5" />
+            <a href="{{ route('dashboard') }}" class="group flex items-center gap-2 px-6 py-5">
+                <span class="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary-600 to-accent-500 text-white shadow-lg shadow-primary-500/30 transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-105">
+                    <span class="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent"></span>
+                    <x-logo-mark class="relative h-5 w-5" />
                 </span>
                 <span class="font-display text-xl tracking-tight text-ink">{{ config('app.name') }}</span>
             </a>
@@ -66,8 +67,9 @@ $bottomNavItems = [
             <!-- Top bar -->
             <header class="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-lg sm:px-6">
                 <div class="flex items-center gap-2 lg:hidden">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-600 to-accent-500 text-white">
-                        <x-icon name="sparkles" class="h-4 w-4" />
+                    <span class="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-primary-600 to-accent-500 text-white">
+                        <span class="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent"></span>
+                        <x-logo-mark class="relative h-4 w-4" />
                     </span>
                     <span class="font-display text-lg text-ink">{{ config('app.name') }}</span>
                 </div>
