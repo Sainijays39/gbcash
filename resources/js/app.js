@@ -146,3 +146,28 @@ const initScrollReveal = () => {
 };
 
 document.addEventListener('DOMContentLoaded', initScrollReveal);
+
+const initNavScrollSpy = () => {
+    const links = document.querySelectorAll('[data-nav-link]');
+    const sections = [...new Set([...links].map((link) => link.dataset.navLink))]
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+    if (!links.length || !sections.length) return;
+
+    const setActive = (id) => {
+        links.forEach((link) => link.classList.toggle('is-active', link.dataset.navLink === id));
+    };
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            const visible = entries.filter((entry) => entry.isIntersecting);
+            if (visible.length) setActive(visible[0].target.id);
+        },
+        { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+};
+
+document.addEventListener('DOMContentLoaded', initNavScrollSpy);
