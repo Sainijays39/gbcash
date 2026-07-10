@@ -2,7 +2,7 @@
 $banners = [
     [
         'title' => 'Refer & Earn Rewards',
-        'desc' => 'Invite friends to NovaPay and unlock exclusive perks together.',
+        'desc' => 'Invite friends to BharatPayee and unlock exclusive perks together.',
         'icon' => 'sparkles',
         'classes' => 'from-primary-600 to-primary-700',
     ],

@@ -1,6 +1,6 @@
 @php
 $faqs = [
-    ['q' => 'Is there a wallet or stored balance?', 'a' => 'No. NovaPay does not maintain a wallet or store your money. Each request is a standalone bill or recharge lookup.'],
+    ['q' => 'Is there a wallet or stored balance?', 'a' => 'No. BharatPayee does not maintain a wallet or store your money. Each request is a standalone bill or recharge lookup.'],
     ['q' => 'How do I sign in without a password?', 'a' => 'Enter your registered mobile number and we\'ll send a one-time password (OTP) to verify it\'s you.'],
     ['q' => 'Can I track my past requests?', 'a' => 'Yes — every request gets a unique reference ID visible in your Transactions page, searchable anytime.'],
     ['q' => 'Which electricity providers are supported?', 'a' => 'We support all major providers including MSEDCL, Adani Electricity, Tata Power, Torrent Power, BESCOM and more.'],

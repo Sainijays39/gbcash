@@ -9,7 +9,7 @@
 
     <script>
         (function () {
-            const stored = localStorage.getItem('novapay-theme');
+            const stored = localStorage.getItem('bharatpayee-theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (stored === 'dark' || (!stored && prefersDark)) {
                 document.documentElement.classList.add('dark');
@@ -23,7 +23,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-dvh bg-surface-muted font-sans text-ink">
+<body class="min-h-dvh overflow-x-hidden bg-surface-muted font-sans text-ink">
     {{ $slot }}
 
     <div
