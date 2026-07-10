@@ -51,7 +51,7 @@
                         <span class="h-3 w-3 rounded-full bg-accent-400 transition-transform duration-200 hover:scale-125"></span>
                         <span class="h-3 w-3 rounded-full bg-emerald-400 transition-transform duration-200 hover:scale-125"></span>
                         <div class="ml-3 flex-1 truncate rounded-md bg-surface px-3 py-1 text-xs text-ink-subtle">
-                            novapay.app/fastag
+                            bharatpayee.in/fastag
                         </div>
                     </div>
 

@@ -82,7 +82,7 @@ $bottomNavItems = [
                         x-data
                         @click="
                             document.documentElement.classList.toggle('dark');
-                            localStorage.setItem('novapay-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                            localStorage.setItem('bharatpayee-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
                         "
                         class="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:bg-surface-muted"
                         aria-label="Toggle dark mode"

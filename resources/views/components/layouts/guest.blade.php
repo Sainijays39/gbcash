@@ -1,7 +1,7 @@
 @props(['title' => null])
 
 <x-layouts.base :title="$title">
-    <div class="relative overflow-hidden">
+    <div class="relative">
         <div class="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary-400/20 blur-3xl dark:bg-primary-500/10"></div>
 
         <header
@@ -32,7 +32,7 @@
                         type="button"
                         @click="
                             document.documentElement.classList.toggle('dark');
-                            localStorage.setItem('novapay-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                            localStorage.setItem('bharatpayee-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
                         "
                         class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:bg-surface-muted"
                         aria-label="Toggle dark mode"
