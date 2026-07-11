@@ -78,6 +78,6 @@
             {{ $slot }}
         </main>
 
-        @includeWhen(!request()->routeIs('login', 'register'), 'landing.partials.footer')
+        @includeWhen(!request()->routeIs('login', 'register', 'admin.*'), 'landing.partials.footer')
     </div>
 </x-layouts.base>
