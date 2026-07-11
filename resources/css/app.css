@@ -51,19 +51,6 @@
     --shadow-glass-lg: 0 20px 60px -12px rgba(109, 40, 217, 0.25);
 }
 
-.dark {
-    --color-surface: #111827;
-    --color-surface-muted: #1e293b;
-    --color-surface-inverse: #f8fafc;
-    --color-border: #2f3b52;
-    --color-ink: #f8fafc;
-    --color-ink-muted: #a3adc2;
-    --color-ink-subtle: #6b7690;
-
-    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
-    --shadow-glass-lg: 0 20px 60px -12px rgba(0, 0, 0, 0.55);
-}
-
 @layer base {
     html {
         scroll-behavior: smooth;

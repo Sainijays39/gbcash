@@ -1,9 +1,9 @@
 @php
 $operatorClasses = [
-    'jio' => 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300',
-    'airtel' => 'border-danger bg-danger/10 text-danger',
-    'vi' => 'border-accent-500 bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-300',
-    'bsnl' => 'border-success bg-success/10 text-success',
+    'BILAVJIO000001' => 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300',
+    'BILAVAIRTEL001' => 'border-danger bg-danger/10 text-danger',
+    'BILAVVODA00001' => 'border-accent-500 bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-300',
+    'BSNL00000NATHL' => 'border-success bg-success/10 text-success',
 ];
 @endphp
 

@@ -76,7 +76,7 @@
                     <!-- Brand name -->
                     <div :style="rightTextStyle" class="z-20 order-1 flex w-full justify-center lg:order-3 lg:justify-end">
                         <h2 class="hero-text-card-silver-matte text-5xl font-black uppercase tracking-tighter md:text-6xl lg:text-7xl">
-                            BharatPayee
+                            BharatPaye
                         </h2>
                     </div>
 
@@ -171,7 +171,7 @@
                             Payments, simplified.
                         </h3>
                         <p class="mx-auto hidden max-w-sm text-sm font-normal leading-relaxed text-blue-100/70 md:block md:text-base lg:mx-0 lg:max-w-none lg:text-lg">
-                            <span class="font-semibold text-white">BharatPayee</span> gives you real-time electricity
+                            <span class="font-semibold text-white">BharatPaye</span> gives you real-time electricity
                             bill lookups, instant Fastag balance checks, and live mobile recharge plans — all from
                             one calm, unified dashboard.
                         </p>

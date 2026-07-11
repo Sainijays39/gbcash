@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Electricity\FetchBillRequest;
 use App\Http\Requests\Electricity\PayBillRequest;
+use App\Services\BillAvenue\BillAvenueException;
 use App\Services\Electricity\ElectricityBillService;
 use App\Services\Electricity\ElectricityProviderService;
 use Illuminate\Http\JsonResponse;
@@ -26,21 +27,30 @@ class ElectricityController extends Controller
 
     public function fetchBill(FetchBillRequest $request): JsonResponse
     {
-        $bill = $this->billService->fetchMockBill(
-            $request->validated('provider'),
-            $request->validated('consumer_number'),
-        );
+        try {
+            $bill = $this->billService->fetchBill(
+                $request->validated('provider'),
+                $request->validated('consumer_number'),
+                Auth::user(),
+            );
+        } catch (BillAvenueException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return response()->json(['bill' => $bill]);
     }
 
     public function pay(PayBillRequest $request): JsonResponse
     {
-        $this->billService->createPendingRequest(
-            Auth::user(),
-            $request->validated('provider'),
-            $request->validated('consumer_number'),
-        );
+        try {
+            $this->billService->createPendingRequest(
+                Auth::user(),
+                $request->validated('provider'),
+                $request->validated('consumer_number'),
+            );
+        } catch (BillAvenueException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return response()->json([
             'message' => 'This service will start soon.',

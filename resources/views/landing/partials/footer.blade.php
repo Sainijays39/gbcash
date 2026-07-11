@@ -3,17 +3,20 @@ $marqueeItems = ['Electricity Bills', 'Fastag Recharge', 'Mobile Recharge', 'OTP
 @endphp
 
 {{--
-    "Curtain reveal" footer: this wrapper reserves extra scroll room (130vh) so the
-    sticky footer below has somewhere to "hold" before releasing. `position: sticky`
-    (not `fixed`) is what makes it dock at the bottom and stay there for the rest of the
-    wrapper's height instead of just being anchored once and scrolling away with it —
-    see the hero partial for the full explanation of why `sticky` is correct here and
-    `fixed` (even inside a transformed ancestor) is not.
+    "Curtain reveal" footer: `position: sticky` (not `fixed`) is what makes it dock at
+    the bottom of the viewport as it scrolls into view — see the hero partial for the
+    full explanation of why `sticky` is correct here and `fixed` (even inside a
+    transformed ancestor) is not.
+
+    The wrapper's height must equal the footer's own height (h-screen) exactly. Any
+    taller and the extra wrapper space has no content in it — since the footer is
+    shorter than the wrapper, it leaves a blank gap of the wrapper's own (transparent)
+    background visible once you've scrolled past it, at the very end of the page.
 --}}
 <div
     x-data="cinematicFooterReveal()"
     x-init="init()"
-    class="relative h-[130vh] w-full"
+    class="relative h-screen w-full"
 >
     <footer id="contact" class="cinematic-footer sticky bottom-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-slate-950 text-white">
         <!-- Ambient aurora + grid -->
@@ -22,7 +25,7 @@ $marqueeItems = ['Electricity Bills', 'Fastag Recharge', 'Mobile Recharge', 'OTP
 
         <!-- Giant background wordmark -->
         <div :style="giantTextStyle" class="pointer-events-none absolute inset-x-0 bottom-[-4vh] z-0 flex justify-center will-change-transform">
-            <x-ui.text-hover-effect text="BharatPayee" :duration="0.15" class="pointer-events-auto h-[26vh] w-full max-w-6xl opacity-90 sm:h-[32vh]" />
+            <x-ui.text-hover-effect text="BharatPaye" :duration="0.15" class="pointer-events-auto h-[26vh] w-full max-w-6xl opacity-90 sm:h-[32vh]" />
         </div>
 
         <!-- Diagonal marquee -->
@@ -75,7 +78,7 @@ $marqueeItems = ['Electricity Bills', 'Fastag Recharge', 'Mobile Recharge', 'OTP
                 <div class="mt-2 flex w-full flex-wrap justify-center gap-3 md:gap-6">
                     @foreach ([
                         ['label' => 'Services', 'href' => route('landing').'#services'],
-                        ['label' => 'Support', 'href' => 'mailto:support@bharatpayee.in'],
+                        ['label' => 'Support', 'href' => 'mailto:support@bharatpaye.in'],
                         ['label' => 'Privacy Policy', 'href' => '#'],
                         ['label' => 'Terms of Service', 'href' => '#'],
                     ] as $link)
