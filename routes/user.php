@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::patch('/email', [ProfileController::class, 'updateEmail'])->name('update-email');
+        Route::post('/mobile/request-otp', [ProfileController::class, 'requestMobileOtp'])->name('mobile.request-otp');
         Route::patch('/mobile', [ProfileController::class, 'updateMobile'])->name('update-mobile');
     });
 });

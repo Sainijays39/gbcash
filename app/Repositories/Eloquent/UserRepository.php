@@ -29,4 +29,22 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::query()->latest()->paginate($perPage);
     }
+
+    public function search(?string $term, int $perPage = 15): LengthAwarePaginator
+    {
+        return User::query()
+            ->when($term, fn ($query) => $query->where(function ($query) use ($term) {
+                $query->where('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('mobile', 'like', "%{$term}%");
+            }))
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    public function count(): int
+    {
+        return User::query()->count();
+    }
 }

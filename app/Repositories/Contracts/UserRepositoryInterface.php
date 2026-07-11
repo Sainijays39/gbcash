@@ -14,4 +14,8 @@ interface UserRepositoryInterface
     public function update(User $user, array $attributes): User;
 
     public function paginate(int $perPage = 15): LengthAwarePaginator;
+
+    public function search(?string $term, int $perPage = 15): LengthAwarePaginator;
+
+    public function count(): int;
 }

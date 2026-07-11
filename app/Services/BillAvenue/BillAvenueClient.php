@@ -4,7 +4,7 @@ namespace App\Services\BillAvenue;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use RuntimeException;
+use Throwable;
 
 /**
  * Thin HTTP client for the BillAvenue BBPS API (JSON variant).
@@ -104,10 +104,19 @@ class BillAvenueClient
                 'body' => $response->body(),
             ]);
 
-            throw new RuntimeException("BillAvenue request to {$path} failed with HTTP {$response->status()}.");
+            throw new BillAvenueException('Could not reach the payment service. Please try again shortly.');
         }
 
-        $decrypted = $this->crypto->decrypt($response->body());
+        try {
+            $decrypted = $this->crypto->decrypt($response->body());
+        } catch (Throwable $e) {
+            Log::error('BillAvenue response could not be decrypted', [
+                'path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+
+            throw new BillAvenueException('Could not reach the payment service. Please try again shortly.', previous: $e);
+        }
 
         $decoded = json_decode($decrypted, true);
 
@@ -117,7 +126,7 @@ class BillAvenueClient
                 'decrypted' => $decrypted,
             ]);
 
-            throw new RuntimeException("BillAvenue response for {$path} could not be parsed.");
+            throw new BillAvenueException('The payment service returned an unexpected response. Please try again shortly.');
         }
 
         $responseCode = $decoded['responseCode'] ?? null;
