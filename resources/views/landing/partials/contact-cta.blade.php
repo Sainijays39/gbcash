@@ -13,7 +13,7 @@
                     Create Free Account
                     <x-icon name="arrow-right" class="h-4 w-4" />
                 </a>
-                <a href="mailto:support@bharatpayee.in" class="btn-secondary">
+                <a href="mailto:support@bharatpaye.in" class="btn-secondary">
                     Talk to Support
                 </a>
             </div>

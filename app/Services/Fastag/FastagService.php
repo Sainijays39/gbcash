@@ -6,40 +6,56 @@ use App\Models\FastagRequest;
 use App\Models\User;
 use App\Repositories\Contracts\FastagRepositoryInterface;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use App\Services\BillAvenue\BillAvenueClient;
 use App\Services\TransactionReferenceGenerator;
+use Illuminate\Support\Facades\Cache;
 
 class FastagService
 {
-    private const NAME_POOL = [
-        'Rohan Mehta', 'Aarav Sharma', 'Priya Nair', 'Sanjay Gupta', 'Ananya Iyer',
-        'Vikram Rao', 'Neha Kapoor', 'Arjun Reddy', 'Kavya Menon', 'Rajesh Kumar',
-    ];
-
     public function __construct(
         private readonly FastagBankService $banks,
         private readonly FastagRepositoryInterface $fastagRepository,
         private readonly TransactionRepositoryInterface $transactionRepository,
         private readonly TransactionReferenceGenerator $referenceGenerator,
+        private readonly BillAvenueClient $billAvenue,
     ) {}
 
-    public function fetchMockDetails(string $vehicleNumber, string $issuerBank): array
+    public function fetchDetails(string $vehicleNumber, string $issuerBank, User $user): array
     {
         $normalized = strtoupper(str_replace(' ', '', $vehicleNumber));
-        $seed = crc32($normalized.'|'.$issuerBank);
+        $inputParamName = $this->primaryInputParamName($issuerBank);
+
+        $response = $this->billAvenue->billFetch([
+            'agentId' => $this->billAvenue->agentId(),
+            'agentDeviceInfo' => $this->billAvenue->agentDeviceInfo(),
+            'customerInfo' => [
+                'customerMobile' => $user->mobile,
+            ],
+            'billerId' => $issuerBank,
+            'inputParams' => [
+                'input' => [
+                    ['paramName' => $inputParamName, 'paramValue' => $normalized],
+                ],
+            ],
+        ]);
+
+        $billerResponse = $response['billerResponse'] ?? [];
+        $additionalInfo = collect($response['additionalInfo']['info'] ?? [])
+            ->pluck('infoValue', 'infoName');
 
         return [
             'vehicle_number' => $normalized,
             'issuer_bank' => $issuerBank,
             'issuer_bank_label' => $this->banks->label($issuerBank),
-            'customer_name' => self::NAME_POOL[$seed % count(self::NAME_POOL)],
-            'current_balance' => round(50 + ($seed % 950), 2),
-            'status' => $seed % 10 === 0 ? 'Inactive' : 'Active',
+            'customer_name' => $billerResponse['customerName'] ?? 'N/A',
+            'current_balance' => (float) ($additionalInfo->get('Fast Tag Balance') ?? $additionalInfo->get('Wallet Balance') ?? 0),
+            'status' => $additionalInfo->get('Tag Status') === 'ACTIVE' ? 'Active' : ($additionalInfo->get('Tag Status') ?? 'Active'),
         ];
     }
 
     public function createPendingRequest(User $user, string $vehicleNumber, string $issuerBank, float $amount): FastagRequest
     {
-        $details = $this->fetchMockDetails($vehicleNumber, $issuerBank);
+        $details = $this->fetchDetails($vehicleNumber, $issuerBank, $user);
 
         $request = $this->fastagRepository->create([
             'user_id' => $user->id,
@@ -61,5 +77,19 @@ class FastagService
         ]);
 
         return $request;
+    }
+
+    private function primaryInputParamName(string $billerId): string
+    {
+        $cacheKey = "billavenue:biller-info:{$billerId}";
+
+        return Cache::remember($cacheKey, now()->addDay(), function () use ($billerId) {
+            $response = $this->billAvenue->billerInfo([$billerId]);
+
+            $biller = $response['biller'][0] ?? null;
+            $paramsList = $biller['billerInputParams'][0]['paramsList'] ?? [];
+
+            return $paramsList[0]['paramName'] ?? 'Vehicle Number';
+        });
     }
 }

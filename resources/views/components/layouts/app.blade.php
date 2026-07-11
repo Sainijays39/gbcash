@@ -77,20 +77,6 @@ $bottomNavItems = [
                 <h1 class="hidden text-lg font-semibold text-ink lg:block">{{ $title ?? 'Dashboard' }}</h1>
 
                 <div class="flex items-center gap-2">
-                    <button
-                        type="button"
-                        x-data
-                        @click="
-                            document.documentElement.classList.toggle('dark');
-                            localStorage.setItem('bharatpayee-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-                        "
-                        class="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:bg-surface-muted"
-                        aria-label="Toggle dark mode"
-                    >
-                        <x-icon name="moon" class="h-5 w-5 dark:hidden" />
-                        <x-icon name="sun" class="hidden h-5 w-5 dark:block" />
-                    </button>
-
                     <form method="POST" action="{{ route('logout') }}" class="lg:hidden">
                         @csrf
                         <button type="submit" class="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-danger transition hover:bg-danger/10" aria-label="Logout">

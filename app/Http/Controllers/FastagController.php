@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Fastag\FetchFastagRequest;
 use App\Http\Requests\Fastag\RechargeFastagRequest;
+use App\Services\BillAvenue\BillAvenueException;
 use App\Services\Fastag\FastagBankService;
 use App\Services\Fastag\FastagService;
 use Illuminate\Http\JsonResponse;
@@ -26,22 +27,31 @@ class FastagController extends Controller
 
     public function fetchDetails(FetchFastagRequest $request): JsonResponse
     {
-        $details = $this->fastagService->fetchMockDetails(
-            $request->validated('vehicle_number'),
-            $request->validated('issuer_bank'),
-        );
+        try {
+            $details = $this->fastagService->fetchDetails(
+                $request->validated('vehicle_number'),
+                $request->validated('issuer_bank'),
+                Auth::user(),
+            );
+        } catch (BillAvenueException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return response()->json(['details' => $details]);
     }
 
     public function recharge(RechargeFastagRequest $request): JsonResponse
     {
-        $this->fastagService->createPendingRequest(
-            Auth::user(),
-            $request->validated('vehicle_number'),
-            $request->validated('issuer_bank'),
-            (float) $request->validated('amount'),
-        );
+        try {
+            $this->fastagService->createPendingRequest(
+                Auth::user(),
+                $request->validated('vehicle_number'),
+                $request->validated('issuer_bank'),
+                (float) $request->validated('amount'),
+            );
+        } catch (BillAvenueException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         return response()->json([
             'message' => 'This service will start soon.',

@@ -28,19 +28,6 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-3">
-                    <button
-                        type="button"
-                        @click="
-                            document.documentElement.classList.toggle('dark');
-                            localStorage.setItem('bharatpayee-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-                        "
-                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:bg-surface-muted"
-                        aria-label="Toggle dark mode"
-                    >
-                        <x-icon name="moon" class="h-5 w-5 dark:hidden" />
-                        <x-icon name="sun" class="hidden h-5 w-5 dark:block" />
-                    </button>
-
                     @auth
                         <a href="{{ route('dashboard') }}" class="btn-primary !px-4 !py-2.5">Dashboard</a>
                     @else

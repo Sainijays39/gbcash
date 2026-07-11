@@ -6,52 +6,60 @@ use App\Models\ElectricityRequest;
 use App\Models\User;
 use App\Repositories\Contracts\ElectricityRepositoryInterface;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use App\Services\BillAvenue\BillAvenueClient;
 use App\Services\TransactionReferenceGenerator;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ElectricityBillService
 {
-    private const NAME_POOL = [
-        'Rohan Mehta', 'Aarav Sharma', 'Priya Nair', 'Sanjay Gupta', 'Ananya Iyer',
-        'Vikram Rao', 'Neha Kapoor', 'Arjun Reddy', 'Kavya Menon', 'Rajesh Kumar',
-    ];
-
     public function __construct(
         private readonly ElectricityProviderService $providers,
         private readonly ElectricityRepositoryInterface $electricityRepository,
         private readonly TransactionRepositoryInterface $transactionRepository,
         private readonly TransactionReferenceGenerator $referenceGenerator,
+        private readonly BillAvenueClient $billAvenue,
     ) {}
 
     /**
-     * Deterministically generate a mock bill for the given provider + consumer number,
-     * so repeated lookups return the same result.
+     * Fetch a real bill from BillAvenue's Bill Fetch API for the given provider
+     * (billerId) + consumer number.
      */
-    public function fetchMockBill(string $provider, string $consumerNumber): array
+    public function fetchBill(string $provider, string $consumerNumber, User $user): array
     {
-        $seed = crc32($provider.'|'.$consumerNumber);
+        $inputParamName = $this->primaryInputParamName($provider);
 
-        $customerName = self::NAME_POOL[$seed % count(self::NAME_POOL)];
-        $billAmount = 350 + ($seed % 4500) + (($seed % 100) / 100);
-        $billNumber = 'BILL'.str_pad((string) ($seed % 900000 + 100000), 6, '0', STR_PAD_LEFT);
-        $billDate = Carbon::now()->subDays(($seed % 20) + 5);
-        $dueDate = Carbon::now()->addDays(($seed % 15) + 3);
+        $response = $this->billAvenue->billFetch([
+            'agentId' => $this->billAvenue->agentId(),
+            'agentDeviceInfo' => $this->billAvenue->agentDeviceInfo(),
+            'customerInfo' => [
+                'customerMobile' => $user->mobile,
+            ],
+            'billerId' => $provider,
+            'inputParams' => [
+                'input' => [
+                    ['paramName' => $inputParamName, 'paramValue' => $consumerNumber],
+                ],
+            ],
+        ]);
+
+        $billerResponse = $response['billerResponse'] ?? [];
 
         return [
             'provider' => $provider,
             'provider_label' => $this->providers->label($provider),
             'consumer_number' => $consumerNumber,
-            'customer_name' => $customerName,
-            'bill_number' => $billNumber,
-            'bill_date' => $billDate->toDateString(),
-            'due_date' => $dueDate->toDateString(),
-            'bill_amount' => round($billAmount, 2),
+            'customer_name' => $billerResponse['customerName'] ?? 'N/A',
+            'bill_number' => $billerResponse['billNumber'] ?? 'N/A',
+            'bill_date' => $billerResponse['billDate'] ?? now()->toDateString(),
+            'due_date' => $billerResponse['dueDate'] ?? now()->toDateString(),
+            // BillAvenue amounts are in paise.
+            'bill_amount' => round((float) ($billerResponse['billAmount'] ?? 0) / 100, 2),
         ];
     }
 
     public function createPendingRequest(User $user, string $provider, string $consumerNumber): ElectricityRequest
     {
-        $bill = $this->fetchMockBill($provider, $consumerNumber);
+        $bill = $this->fetchBill($provider, $consumerNumber, $user);
 
         $request = $this->electricityRepository->create([
             'user_id' => $user->id,
@@ -75,5 +83,23 @@ class ElectricityBillService
         ]);
 
         return $request;
+    }
+
+    /**
+     * BillAvenue recommends caching Biller Info (it changes at most daily) rather
+     * than calling it before every single Bill Fetch.
+     */
+    private function primaryInputParamName(string $billerId): string
+    {
+        $cacheKey = "billavenue:biller-info:{$billerId}";
+
+        return Cache::remember($cacheKey, now()->addDay(), function () use ($billerId) {
+            $response = $this->billAvenue->billerInfo([$billerId]);
+
+            $biller = $response['biller'][0] ?? null;
+            $paramsList = $biller['billerInputParams'][0]['paramsList'] ?? [];
+
+            return $paramsList[0]['paramName'] ?? 'Consumer Number';
+        });
     }
 }
