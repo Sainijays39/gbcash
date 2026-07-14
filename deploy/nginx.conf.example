@@ -1,0 +1,46 @@
+# Nginx server block for BharatPaye (Laravel 12).
+#
+# 1. Copy to /etc/nginx/sites-available/bharatpaye.conf on the VPS
+# 2. Replace yourdomain.com and the PHP-FPM socket path (check with:
+#    ls /run/php/  — pick whichever php*-fpm.sock matches your installed PHP version)
+# 3. Symlink it: ln -s /etc/nginx/sites-available/bharatpaye.conf /etc/nginx/sites-enabled/
+# 4. Test + reload: nginx -t && systemctl reload nginx
+# 5. Run certbot (see deploy/DEPLOYMENT.md) to add the HTTPS server block —
+#    certbot --nginx will rewrite this file for you, so don't hand-write the SSL block.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    root /var/www/bharatpaye/public;
+    index index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    client_max_body_size 20M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_hide_header X-Powered-By;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    location ~ ^/(\.env|composer\.(json|lock)|package(-lock)?\.json|artisan|storage/(app|framework|logs)) {
+        deny all;
+    }
+
+    access_log /var/log/nginx/bharatpaye-access.log;
+    error_log /var/log/nginx/bharatpaye-error.log;
+}
